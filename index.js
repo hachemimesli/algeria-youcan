@@ -192,8 +192,57 @@
     JSON.stringify(rawPrice)
   );
 
-  const price =
-    getNumber(rawPrice);
+ const rawPrice =
+  priceElement.textContent;
+
+console.log(
+  "[Kidzy Checkout] Raw product price:",
+  JSON.stringify(rawPrice)
+);
+
+const price = Number(
+  String(rawPrice).trim()
+);
+
+console.log(
+  "========== PRICE DEBUG =========="
+);
+
+console.log("rawPrice:", rawPrice);
+console.log("rawPrice type:", typeof rawPrice);
+console.log("price:", price);
+console.log("price type:", typeof price);
+console.log("isNaN:", Number.isNaN(price));
+
+console.log(
+  "================================="
+);
+
+if (price <= 0) {
+  console.warn(
+    "[Kidzy Checkout] Product price could not be read.",
+    {
+      rawPrice,
+      parsedPrice: price,
+      element: priceElement
+    }
+  );
+
+  return false;
+}
+
+App.productPrice = price;
+
+App.totalPrice =
+  App.productPrice +
+  App.shippingPrice;
+
+console.log(
+  "[Kidzy Checkout] Product price successfully set to:",
+  App.productPrice
+);
+
+return true;
 
   console.log(
     "[Kidzy Checkout] Parsed product price:",
