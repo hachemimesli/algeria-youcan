@@ -807,9 +807,9 @@ function readProductPrice() {
 
   select[name="extra_fields[custom_field_xx8HU0g0yU9dhXE]"],
   select[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"] {
-    direction: rtl;
-    text-align: right;
-    text-align-last: right;
+    direction: ltr;
+    text-align: left;
+    text-align-last: left;
     appearance: none;
     -webkit-appearance: none;
 
