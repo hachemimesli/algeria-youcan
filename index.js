@@ -235,7 +235,7 @@ function readProductPrice() {
     }
 
     if (commune && typeof commune.name === "string") {
-      return commune.name;
+      return commune.name_ar;
     }
 
     return "";
@@ -293,7 +293,7 @@ function readProductPrice() {
 
     clearSelect(select);
 
-    addOption(select, "", "Choisissez votre wilaya");
+    addOption(select, "", "إختر الولاية");
 
     const wilayas = [...data].sort((a, b) =>
   Number(a.code) - Number(b.code)
@@ -334,7 +334,7 @@ function readProductPrice() {
     addOption(
       select,
       "",
-      code ? "Choisissez votre commune" : "Choisissez d'abord votre wilaya",
+      code ? "إختر الولاية أولا" : "إختر البلدية",
     );
 
     if (!code) {
