@@ -172,6 +172,7 @@
 
   function readProductPrice() {
 
+   console.log("HEYYYYYYYYYYYYYYYYY");
    console.log("🔥 READ PRODUCT PRICE FUNCTION RUNNING");
   const priceElement =
     document.querySelector(
