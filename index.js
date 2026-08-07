@@ -15,9 +15,9 @@
 
   const CONFIG = {
     selectors: {
-      wilaya: '[name="extra_fields[custom_field_xx8HUOg0yUo9dhXE]"]',
+      wilaya: 'select[name="extra_fields[custom_field_xx8HUOg0yUo9dhXE]"]',
 
-      commune: '[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"]',
+      commune: 'select[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"]',
 
       price:".product-section.price-section .single-price .value",
     },
@@ -278,170 +278,78 @@ function readProductPrice() {
     return option;
   }
 
- function populateWilayas() {
-  const combobox = App.wilayaSelect;
+  function populateWilayas() {
+    const select = App.wilayaSelect;
+    const data = getAlgeriaData();
 
-  if (!combobox) {
-    return;
-  }
-
-  /*
-   * The new YouCan theme already provides
-   * all Wilaya options.
-   *
-   * We DO NOT replace them.
-   */
-
-  log(
-    "Wilaya combobox detected:",
-    combobox
-  );
-
-  log(
-    "Wilaya options:",
-    combobox.querySelectorAll("option").length
-  );
-}
-
-function notifyCombobox(combobox) {
-  if (!combobox) {
-    return;
-  }
-
-  /*
-   * Give the custom YouCan component
-   * time to detect the new options.
-   */
-  setTimeout(() => {
-    try {
-      combobox.dispatchEvent(
-        new Event("input", {
-          bubbles: true,
-        })
-      );
-
-      combobox.dispatchEvent(
-        new Event("change", {
-          bubbles: true,
-        })
-      );
-    } catch (e) {
-      warn(
-        "Could not notify combobox:",
-        e
-      );
-    }
-  }, 0);
-}
- 
- function populateCommunes(code) {
-  const combobox = App.communeSelect;
-
-  if (!combobox) {
-    return;
-  }
-
-  /*
-   * Remove existing commune options.
-   */
-  combobox
-    .querySelectorAll("option")
-    .forEach((option) => option.remove());
-
-  /*
-   * Initial option.
-   */
-  const first = document.createElement("option");
-
-  first.value = "";
-
-  first.textContent = code
-    ? "Choisissez votre commune"
-    : "Choisissez d'abord votre wilaya";
-
-  combobox.appendChild(first);
-
-  /*
-   * No Wilaya selected.
-   */
-  if (!code) {
-    combobox.disabled = true;
-
-    notifyCombobox(combobox);
-
-    return;
-  }
-
-  /*
-   * Find Wilaya in ALGERIA_DATA.
-   */
-  const wilaya = getWilayaData(code);
-
-  if (!wilaya) {
-    warn("Wilaya data not found:", code);
-
-    combobox.disabled = true;
-
-    notifyCombobox(combobox);
-
-    return;
-  }
-
-  /*
-   * Get communes.
-   */
-  const communes = Array.isArray(wilaya.communes)
-    ? [...wilaya.communes]
-    : [];
-
-  communes.sort((a, b) => {
-    const nameA = getCommuneName(a);
-    const nameB = getCommuneName(b);
-
-    return nameA.localeCompare(nameB, "fr");
-  });
-
-  /*
-   * Add communes.
-   */
-  communes.forEach((commune) => {
-    const name = getCommuneName(commune);
-
-    if (!name) {
+    if (!select) {
       return;
     }
 
-    const option = document.createElement("option");
+    if (!data) {
+      error("ALGERIA_DATA is not available.");
+      return;
+    }
 
-    /*
-     * Use commune code when available.
-     * Otherwise use the name.
-     */
-    option.value =
-      typeof commune === "object" && commune.code
-        ? String(commune.code)
-        : name;
+    clearSelect(select);
 
-    option.textContent = name;
+    addOption(select, "", "Choisissez votre wilaya");
 
-    combobox.appendChild(option);
-  });
+    const wilayas = [...data].sort((a, b) =>
+      String(a.name).localeCompare(String(b.name), "fr"),
+    );
 
-  combobox.disabled = communes.length === 0;
+    wilayas.forEach((wilaya) => {
+      if (!wilaya) {
+        return;
+      }
 
-  /*
-   * Tell YouCan's custom component
-   * that its options changed.
-   */
-  notifyCombobox(combobox);
+      const code = String(wilaya.code ?? "");
 
-  log(
-    "Communes loaded:",
-    communes.length,
-    "for Wilaya:",
-    code
-  );
-}
+      const name = String(wilaya.name ?? "");
+
+      if (!code || !name) {
+        return;
+      }
+
+      addOption(select, code, name);
+    });
+
+    select.value = "";
+
+    log("Wilayas loaded:", wilayas.length);
+  }
+
+  function populateCommunes(code) {
+    const select = App.communeSelect;
+
+    if (!select) {
+      return;
+    }
+
+    clearSelect(select);
+
+    addOption(
+      select,
+      "",
+      code ? "Choisissez votre commune" : "Choisissez d'abord votre wilaya",
+    );
+
+    if (!code) {
+      select.disabled = true;
+      return;
+    }
+
+    const communes = getCommunesForWilaya(code);
+
+    communes.forEach((commune) => {
+      addOption(select, commune, commune);
+    });
+
+    select.disabled = communes.length === 0;
+
+    log("Communes loaded:", communes.length);
+  }
 
   /* =====================================================
      CHOICES.JS
@@ -1048,184 +956,49 @@ function notifyCombobox(combobox) {
      FIELD EVENTS
   ===================================================== */
 
-function getComboboxValue(combobox) {
-  if (!combobox) {
-    return "";
+  function handleWilayaChange() {
+    if (!App.wilayaSelect) {
+      return;
+    }
+
+    App.selectedWilaya = App.wilayaSelect.value || "";
+
+    App.selectedCommune = "";
+
+    refreshCommuneChoices();
+
+    updateShipping();
+    updateSummary();
+
+    hideValidationMessage();
+
+    log("Wilaya:", App.selectedWilaya);
   }
-
-  /*
-   * Try the standard value property.
-   */
-  if (
-    typeof combobox.value === "string" &&
-    combobox.value
-  ) {
-    return combobox.value;
-  }
-
-  /*
-   * Try the value attribute.
-   */
-  const attributeValue =
-    combobox.getAttribute("value");
-
-  if (attributeValue) {
-    return attributeValue;
-  }
-
-  /*
-   * Try selected option.
-   */
-  const selectedOption =
-    combobox.querySelector(
-      "option[selected]"
-    );
-
-  if (selectedOption) {
-    return (
-      selectedOption.value ||
-      selectedOption.textContent.trim()
-    );
-  }
-
-  /*
-   * Try an internal native select.
-   */
-  const nativeSelect =
-    combobox.querySelector("select");
-
-  if (nativeSelect) {
-    return nativeSelect.value || "";
-  }
-
-  /*
-   * Try an internal input.
-   */
-  const input =
-    combobox.querySelector(
-      "input"
-    );
-
-  if (input) {
-    return input.value || "";
-  }
-
-  return "";
-}
-
- 
- function handleWilayaChange() {
-  if (!App.wilayaSelect) {
-    return;
-  }
-
-  const value = getComboboxValue(
-    App.wilayaSelect
-  );
-
-  App.selectedWilaya = value || "";
-
-  /*
-   * Changing Wilaya resets Commune.
-   */
-  App.selectedCommune = "";
-
-  /*
-   * Load communes.
-   */
-  populateCommunes(
-    App.selectedWilaya
-  );
-
-  /*
-   * Update delivery prices.
-   */
-  updateShipping();
-
-  updateSummary();
-
-  hideValidationMessage();
-
-  log(
-    "Wilaya changed:",
-    App.selectedWilaya
-  );
-}
 
   function handleCommuneChange() {
-  if (!App.communeSelect) {
-    return;
+    if (!App.communeSelect) {
+      return;
+    }
+
+    App.selectedCommune = App.communeSelect.value || "";
+
+    updateShipping();
+    updateSummary();
+
+    hideValidationMessage();
+
+    log("Commune:", App.selectedCommune);
   }
-
-  App.selectedCommune =
-    getComboboxValue(
-      App.communeSelect
-    );
-
-  log(
-    "Commune changed:",
-    App.selectedCommune
-  );
-
-  hideValidationMessage();
-
-  updateShipping();
-
-  updateSummary();
-}
 
   function attachFieldEvents() {
-  if (
-    !App.wilayaSelect ||
-    !App.communeSelect
-  ) {
-    return;
+    if (!App.wilayaSelect || !App.communeSelect) {
+      return;
+    }
+
+    App.wilayaSelect.onchange = handleWilayaChange;
+
+    App.communeSelect.onchange = handleCommuneChange;
   }
-
-  /*
-   * Remove previous handlers by using
-   * our own marker.
-   */
-  if (
-    App.wilayaSelect.dataset
-      .kidzyEventsAttached !== "true"
-  ) {
-    App.wilayaSelect.addEventListener(
-      "change",
-      handleWilayaChange
-    );
-
-    App.wilayaSelect.addEventListener(
-      "input",
-      handleWilayaChange
-    );
-
-    App.wilayaSelect.dataset
-      .kidzyEventsAttached = "true";
-  }
-
-  if (
-    App.communeSelect.dataset
-      .kidzyEventsAttached !== "true"
-  ) {
-    App.communeSelect.addEventListener(
-      "change",
-      handleCommuneChange
-    );
-
-    App.communeSelect.addEventListener(
-      "input",
-      handleCommuneChange
-    );
-
-    App.communeSelect.dataset
-      .kidzyEventsAttached = "true";
-  }
-
-  log(
-    "yc-combobox events attached."
-  );
-}
 
   /* =====================================================
      VALIDATION
