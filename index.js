@@ -19,7 +19,7 @@
 
       commune: 'select[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"]',
 
-      price: ".value",
+      price:".product-section.price-section .single-price .value",
     },
 
     timing: {
@@ -112,25 +112,42 @@
   ===================================================== */
 
   function readProductPrice() {
-    const priceElement = $(CONFIG.selectors.price);
+  const priceElement = document.querySelector(
+    ".product-section.price-section h2.single-price .value"
+  );
 
-    if (!priceElement) {
-      warn("Product price element not found.");
-      return false;
-    }
-
-    const price = getNumber(priceElement.textContent);
-
-    if (price <= 0) {
-      warn("Product price could not be read.");
-      return false;
-    }
-
-    App.productPrice = price;
-    App.totalPrice = price + App.shippingPrice;
-
-    return true;
+  if (!priceElement) {
+    console.warn(
+      "[Kidzy Checkout] Product price element not found."
+    );
+    return false;
   }
+
+  const rawPrice =
+    priceElement.textContent.trim();
+
+  const price = getNumber(rawPrice);
+
+  if (price <= 0) {
+    console.warn(
+      "[Kidzy Checkout] Product price could not be read.",
+      rawPrice
+    );
+    return false;
+  }
+
+  App.productPrice = price;
+
+  App.totalPrice =
+    App.productPrice + App.shippingPrice;
+
+  console.log(
+    "[Kidzy Checkout] Product price:",
+    App.productPrice
+  );
+
+  return true;
+}
 
   /* =====================================================
      FIELD DETECTION
