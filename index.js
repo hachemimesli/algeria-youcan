@@ -80,104 +80,66 @@
     return Number(value || 0).toLocaleString("fr-FR") + " DA";
   }
 
- function getNumber(value) {
-  if (
-    value === null ||
-    value === undefined
-  ) {
+function getNumber(value) {
+  if (value === null || value === undefined) {
     return 0;
   }
 
-  let text = String(value)
-    .trim();
+  let text = String(value).trim();
 
-  // Convert Arabic-Indic digits to Western digits
-  text = text.replace(
-    /[٠-٩]/g,
-    (digit) =>
-      String(
-        "٠١٢٣٤٥٦٧٨٩".indexOf(digit)
-      )
+  text = text.replace(/[٠-٩]/g, (digit) =>
+    String("٠١٢٣٤٥٦٧٨٩".indexOf(digit))
   );
 
-  // Convert Persian digits too
-  text = text.replace(
-    /[۰-۹]/g,
-    (digit) =>
-      String(
-        "۰۱۲۳۴۵۶۷۸۹".indexOf(digit)
-      )
+  text = text.replace(/[۰-۹]/g, (digit) =>
+    String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit))
   );
 
-  // Remove spaces and non-numeric characters
   text = text
     .replace(/\s/g, "")
     .replace(/[^\d.,-]/g, "");
 
-  // If both comma and dot exist,
-  // treat the last one as decimal separator.
-  if (
-    text.includes(",") &&
-    text.includes(".")
-  ) {
-    if (
-      text.lastIndexOf(",") >
-      text.lastIndexOf(".")
-    ) {
+  if (text.includes(",") && text.includes(".")) {
+    if (text.lastIndexOf(",") > text.lastIndexOf(".")) {
       text = text
         .replace(/\./g, "")
         .replace(",", ".");
     } else {
       text = text.replace(/,/g, "");
     }
-  } else if (
-    text.includes(",")
-  ) {
+  } else if (text.includes(",")) {
     text = text.replace(",", ".");
   }
 
-  const number =
-    parseFloat(text);
+  const number = parseFloat(text);
 
-  return Number.isFinite(number)
-    ? number
-    : 0;
+  return Number.isFinite(number) ? number : 0;
 }
 
-    const cleaned = String(value)
-      .replace(/\s/g, "")
-      .replace(/[^\d.,-]/g, "")
-      .replace(",", ".");
+function log(...args) {
+  console.log("[Kidzy Checkout]", ...args);
+}
 
-    const number = parseFloat(cleaned);
+function warn(...args) {
+  console.warn("[Kidzy Checkout]", ...args);
+}
 
-    return Number.isFinite(number) ? number : 0;
-  }
+function error(...args) {
+  console.error("[Kidzy Checkout]", ...args);
+}
 
-  function log(...args) {
-    console.log("[Kidzy Checkout]", ...args);
-  }
+/* =====================================================
+   PRODUCT PRICE
+===================================================== */
 
-  function warn(...args) {
-    console.warn("[Kidzy Checkout]", ...args);
-  }
+function readProductPrice() {
+  console.log("🔥 READ PRODUCT PRICE FUNCTION RUNNING");
 
-  function error(...args) {
-    console.error("[Kidzy Checkout]", ...args);
-  }
+  const priceElement = document.querySelector(
+    ".product-section.price-section .single-price .value"
+  );
 
-  /* =====================================================
-     PRODUCT PRICE
-  ===================================================== */
-
-  function readProductPrice() {
-
-   console.log("HEYYYYYYYYYYYYYYYYY");
-   console.log("🔥 READ PRODUCT PRICE FUNCTION RUNNING");
-  const priceElement =
-    document.querySelector(
-      ".product-section.price-section .single-price .value"
-    );
+  console.log("PRICE ELEMENT:", priceElement);
 
   if (!priceElement) {
     console.warn(
@@ -187,116 +149,26 @@
     return false;
   }
 
-  const rawPrice =
-    priceElement.textContent;
+  const rawPrice = priceElement.textContent.trim();
 
   console.log(
-    "[Kidzy Checkout] Raw product price:",
-    JSON.stringify(rawPrice)
+    "[Kidzy Checkout] RAW PRICE:",
+    rawPrice
   );
 
- const rawPrice =
-  priceElement.textContent;
-
-console.log(
-  "[Kidzy Checkout] Raw product price:",
-  JSON.stringify(rawPrice)
-);
-
-const price = Number(
-  String(rawPrice).trim()
-);
-
-console.log(
-  "========== PRICE DEBUG =========="
-);
-
-console.log("rawPrice:", rawPrice);
-console.log("rawPrice type:", typeof rawPrice);
-console.log("price:", price);
-console.log("price type:", typeof price);
-console.log("isNaN:", Number.isNaN(price));
-
-console.log(
-  "================================="
-);
-
-if (price <= 0) {
-  console.warn(
-    "[Kidzy Checkout] Product price could not be read.",
-    {
-      rawPrice,
-      parsedPrice: price,
-      element: priceElement
-    }
-  );
-
-  return false;
-}
-
-App.productPrice = price;
-
-App.totalPrice =
-  App.productPrice +
-  App.shippingPrice;
-
-console.log(
-  "[Kidzy Checkout] Product price successfully set to:",
-  App.productPrice
-);
-
-return true;
+  const price = Number(rawPrice);
 
   console.log(
-    "[Kidzy Checkout] Parsed product price:",
+    "[Kidzy Checkout] PARSED PRICE:",
     price
   );
 
-  if (price <= 0) {
+  if (!Number.isFinite(price) || price <= 0) {
     console.warn(
-      "[Kidzy Checkout] Product price could not be read.",
-      {
-        rawPrice,
-        parsedPrice: price,
-        element: priceElement
-      }
-    );
-
-    return false;
-  }
-
-  App.productPrice =
-    price;
-
-  App.totalPrice =
-    App.productPrice +
-    App.shippingPrice;
-
-  console.log(
-    "[Kidzy Checkout] Product price successfully set to:",
-    App.productPrice
-  );
-
-  return true;
-}
-
-  if (!priceElement) {
-    console.warn(
-      "[Kidzy Checkout] Product price element not found."
-    );
-    return false;
-  }
-
-  const rawPrice =
-    priceElement.textContent.trim();
-
-  const price = getNumber(rawPrice);
-
-  if (price <= 0) {
-    console.warn(
-      "[Kidzy Checkout] Product price could not be read.",
+      "[Kidzy Checkout] Invalid product price:",
       rawPrice
     );
+
     return false;
   }
 
@@ -306,7 +178,7 @@ return true;
     App.productPrice + App.shippingPrice;
 
   console.log(
-    "[Kidzy Checkout] Product price:",
+    "[Kidzy Checkout] PRODUCT PRICE SET:",
     App.productPrice
   );
 
