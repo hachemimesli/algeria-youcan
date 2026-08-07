@@ -15,9 +15,9 @@
 
   const CONFIG = {
     selectors: {
-      wilaya: 'select[name="extra_fields[custom_field_xx8HUOg0yUo9dhXE]"]',
+      wilaya: '[name="extra_fields[custom_field_xx8HUOg0yUo9dhXE]"]',
 
-      commune: 'select[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"]',
+      commune: '[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"]',
 
       price:".product-section.price-section .single-price .value",
     },
