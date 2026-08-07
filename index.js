@@ -390,7 +390,7 @@ function readProductPrice() {
 
       placeholder: true,
 
-      placeholderValue: "Choisissez votre wilaya",
+      placeholderValue: "إختر الولاية",
 
       itemSelectText: "",
 
@@ -424,7 +424,7 @@ function readProductPrice() {
 
       placeholder: true,
 
-      placeholderValue: "Choisissez votre commune",
+      placeholderValue: "إختر البلدية",
 
       itemSelectText: "",
 
@@ -1010,14 +1010,14 @@ function readProductPrice() {
     if (!App.selectedWilaya) {
       return {
         valid: false,
-        message: "Veuillez choisir votre wilaya.",
+        message: "يرجى إختيار الولاية",
       };
     }
 
     if (!App.selectedCommune) {
       return {
         valid: false,
-        message: "Veuillez choisir votre commune.",
+        message: "يرجى إختيار البلدية",
       };
     }
 
