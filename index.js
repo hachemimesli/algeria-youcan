@@ -805,21 +805,16 @@ function readProductPrice() {
     box-sizing: border-box;
   }
 
-  select[name="extra_fields[custom_field_xx8HU0g0yU9dhXE]"],
-  select[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"] {
-    direction: ltr;
-    text-align: left;
-    text-align-last: left;
-    appearance: none;
-    -webkit-appearance: none;
+    /* Arabic dropdown */
+  .choices[data-type*="select-one"]::after {
+    left: 11.5px;
+    right: auto;
+  }
 
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23666' stroke-width='1.5'/%3E%3C/svg%3E");
-
-    background-repeat: no-repeat;
-    background-position: left 12px center;
-
+  .choices[data-type*="select-one"] .choices__inner {
+    direction: rtl;
+    text-align: right;
     padding-left: 35px;
-    padding-right: 12px;
   }
 
   #kidzy-algeria-checkout *,
