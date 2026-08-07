@@ -77,7 +77,7 @@
   }
 
   function formatDA(value) {
-    return Number(value || 0).toLocaleString("fr-FR") + " DA";
+    return Number(value || 0).toLocaleString("fr-FR") + " دج ";
   }
 
 function getNumber(value) {
