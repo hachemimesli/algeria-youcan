@@ -171,6 +171,8 @@
   ===================================================== */
 
   function readProductPrice() {
+
+   console.log("🔥 READ PRODUCT PRICE FUNCTION RUNNING");
   const priceElement =
     document.querySelector(
       ".product-section.price-section .single-price .value"
