@@ -805,6 +805,12 @@ function readProductPrice() {
         box-sizing: border-box;
       }
 
+      select[name="extra_fields[custom_field_xx8HU0g0yU9dhXE]"],
+      select[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"] {
+    direction: rtl;
+    text-align: right;
+  }
+
       #kidzy-algeria-checkout *,
       #kidzy-algeria-checkout *::before,
       #kidzy-algeria-checkout *::after {
