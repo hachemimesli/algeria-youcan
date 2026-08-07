@@ -334,7 +334,7 @@ function readProductPrice() {
     addOption(
       select,
       "",
-      code ? "إختر الولاية أولا" : "إختر البلدية",
+      code ? "إختر البلدية" : "إختر الولاية أولا",
     );
 
     if (!code) {
@@ -568,7 +568,7 @@ function readProductPrice() {
 
         <div class="kidzy-section-title">
           <span class="kidzy-title-icon">🚚</span>
-          <span>Mode de livraison</span>
+          <span>نوع التوصيل</span>
         </div>
 
         <div class="kidzy-delivery-options">
@@ -584,11 +584,11 @@ function readProductPrice() {
 
             <div class="kidzy-delivery-content">
               <div class="kidzy-delivery-name">
-                Stop Desk
+                إلى المكتب
               </div>
 
               <div class="kidzy-delivery-description">
-                Livraison vers un point relais
+                إلى مكتب شركة World Express
               </div>
             </div>
 
@@ -611,11 +611,11 @@ function readProductPrice() {
 
             <div class="kidzy-delivery-content">
               <div class="kidzy-delivery-name">
-                Domicile
+                 إلى المنزل
               </div>
 
               <div class="kidzy-delivery-description">
-                Livraison directement à domicile
+                
               </div>
             </div>
 
@@ -632,14 +632,14 @@ function readProductPrice() {
         <div class="kidzy-order-summary">
 
           <div class="kidzy-summary-row">
-            <span>Sous-total</span>
+            <span>المنتج</span>
             <strong data-summary="subtotal">
               --
             </strong>
           </div>
 
           <div class="kidzy-summary-row">
-            <span>Livraison</span>
+            <span>التوصيل</span>
             <strong data-summary="shipping">
               --
             </strong>
@@ -648,7 +648,7 @@ function readProductPrice() {
           <div class="kidzy-summary-divider"></div>
 
           <div class="kidzy-summary-row kidzy-total-row">
-            <span>Total</span>
+            <span>المجموع</span>
             <strong data-summary="total">
               --
             </strong>
