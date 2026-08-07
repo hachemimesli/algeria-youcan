@@ -798,29 +798,39 @@ function readProductPrice() {
 
     style.id = CONFIG.ui.stylesId;
 
-    style.textContent = `
-      #kidzy-algeria-checkout {
-        width: 100%;
-        margin: 20px 0;
-        box-sizing: border-box;
-      }
-
-      select[name="extra_fields[custom_field_xx8HU0g0yU9dhXE]"],
-      select[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"] {
-    direction: rtl;
-    text-align: right;
+   style.textContent = `
+  #kidzy-algeria-checkout {
+    width: 100%;
+    margin: 20px 0;
+    box-sizing: border-box;
   }
 
-      #kidzy-algeria-checkout *,
-      #kidzy-algeria-checkout *::before,
-      #kidzy-algeria-checkout *::after {
-        box-sizing: border-box;
-      }
+  select[name="extra_fields[custom_field_xx8HU0g0yU9dhXE]"],
+  select[name="extra_fields[custom_field_wDvNqdDgWa9ADzP7]"] {
+    direction: rtl;
+    text-align: right;
+    text-align-last: right;
+    appearance: none;
+    -webkit-appearance: none;
 
-      .kidzy-delivery-section {
-        width: 100%;
-      }
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23666' stroke-width='1.5'/%3E%3C/svg%3E");
 
+    background-repeat: no-repeat;
+    background-position: left 12px center;
+
+    padding-left: 35px;
+    padding-right: 12px;
+  }
+
+  #kidzy-algeria-checkout *,
+  #kidzy-algeria-checkout *::before,
+  #kidzy-algeria-checkout *::after {
+    box-sizing: border-box;
+  }
+
+  .kidzy-delivery-section {
+    width: 100%;
+  }
       .kidzy-section-title {
         display: flex;
         align-items: center;
