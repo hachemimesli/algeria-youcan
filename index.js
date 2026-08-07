@@ -296,8 +296,10 @@ function readProductPrice() {
     addOption(select, "", "Choisissez votre wilaya");
 
     const wilayas = [...data].sort((a, b) =>
-      String(a.name).localeCompare(String(b.name), "fr"),
-    );
+  Number(a.code) - Number(b.code)
+);
+
+ 
 
     wilayas.forEach((wilaya) => {
       if (!wilaya) {
@@ -306,7 +308,7 @@ function readProductPrice() {
 
       const code = String(wilaya.code ?? "");
 
-      const name = String(wilaya.name ?? "");
+      const name = String(wilaya.name_ar ?? "");
 
       if (!code || !name) {
         return;
