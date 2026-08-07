@@ -80,10 +80,69 @@
     return Number(value || 0).toLocaleString("fr-FR") + " DA";
   }
 
-  function getNumber(value) {
-    if (value === null || value === undefined) {
-      return 0;
+ function getNumber(value) {
+  if (
+    value === null ||
+    value === undefined
+  ) {
+    return 0;
+  }
+
+  let text = String(value)
+    .trim();
+
+  // Convert Arabic-Indic digits to Western digits
+  text = text.replace(
+    /[٠-٩]/g,
+    (digit) =>
+      String(
+        "٠١٢٣٤٥٦٧٨٩".indexOf(digit)
+      )
+  );
+
+  // Convert Persian digits too
+  text = text.replace(
+    /[۰-۹]/g,
+    (digit) =>
+      String(
+        "۰۱۲۳۴۵۶۷۸۹".indexOf(digit)
+      )
+  );
+
+  // Remove spaces and non-numeric characters
+  text = text
+    .replace(/\s/g, "")
+    .replace(/[^\d.,-]/g, "");
+
+  // If both comma and dot exist,
+  // treat the last one as decimal separator.
+  if (
+    text.includes(",") &&
+    text.includes(".")
+  ) {
+    if (
+      text.lastIndexOf(",") >
+      text.lastIndexOf(".")
+    ) {
+      text = text
+        .replace(/\./g, "")
+        .replace(",", ".");
+    } else {
+      text = text.replace(/,/g, "");
     }
+  } else if (
+    text.includes(",")
+  ) {
+    text = text.replace(",", ".");
+  }
+
+  const number =
+    parseFloat(text);
+
+  return Number.isFinite(number)
+    ? number
+    : 0;
+}
 
     const cleaned = String(value)
       .replace(/\s/g, "")
@@ -112,9 +171,62 @@
   ===================================================== */
 
   function readProductPrice() {
-  const priceElement = document.querySelector(
-    ".product-section.price-section h2.single-price .value"
+  const priceElement =
+    document.querySelector(
+      ".product-section.price-section .single-price .value"
+    );
+
+  if (!priceElement) {
+    console.warn(
+      "[Kidzy Checkout] Product price element NOT FOUND."
+    );
+
+    return false;
+  }
+
+  const rawPrice =
+    priceElement.textContent;
+
+  console.log(
+    "[Kidzy Checkout] Raw product price:",
+    JSON.stringify(rawPrice)
   );
+
+  const price =
+    getNumber(rawPrice);
+
+  console.log(
+    "[Kidzy Checkout] Parsed product price:",
+    price
+  );
+
+  if (price <= 0) {
+    console.warn(
+      "[Kidzy Checkout] Product price could not be read.",
+      {
+        rawPrice,
+        parsedPrice: price,
+        element: priceElement
+      }
+    );
+
+    return false;
+  }
+
+  App.productPrice =
+    price;
+
+  App.totalPrice =
+    App.productPrice +
+    App.shippingPrice;
+
+  console.log(
+    "[Kidzy Checkout] Product price successfully set to:",
+    App.productPrice
+  );
+
+  return true;
+}
 
   if (!priceElement) {
     console.warn(
